@@ -19,7 +19,7 @@ stages:
     - grunt revers
   artifacts:
     paths:
-      - dist/
+      - build/
     expire_in: 1 day
 
 
