@@ -57,7 +57,7 @@ build:
   <<: *common_build_ref
   stage: build
   script:
-    - grunt ${CI_COMMIT_REF_NAME}
+    - echo build
   only:
     refs:
       - tags
