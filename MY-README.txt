@@ -1,2 +1,0 @@
-npm install && npm uninstall jsql-superagent-plugin && npm i ../jsql-superagent && npm uninstall jsql-axios-plugin && npm i ../jsql-axios && npm install grunt --force && npm install --force && rmdir node_modules\npm-jsql /s /q && rmdir node_modules\grunt-jsql /s /q
-cd ../jsql-react-test-app && grunt copy-hash && npm run-script build && grunt revers && grunt browser && serve -s build

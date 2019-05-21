@@ -1,1 +1,1 @@
-grunt copy-hash && npm run-script build && grunt revers && grunt browser && serve -s build
+CALL npm run serve

@@ -1,4 +1,60 @@
-import JsqlService from 'jsql-superagent';
+import React, {Component} from 'react';
+import {Cases} from "./cases";
+
+import './App.css';
+
+
+class App extends Component {
+
+    constructor(props) {
+
+        super(props);
+
+        this.state = {
+            results: []
+        }
+    }
+
+    componentDidMount() {
+
+        let cases = new Cases();
+        cases.init(this, this.state);
+        cases[cases.cases.names.caseName1]();
+
+    }
+
+    render() {
+        return (
+
+            <div id="app">
+                <p><span>JSQL React (16.8.6) changed </span> - unit testing</p>
+                <table>
+                    <thead>
+                        <th>Case</th>
+                        <th>Duration (ms)</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                    {this.state.results ?
+                        this.state.results.map((result, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{result.caseName}</td>
+                                    <td>{result.duration}</td>
+                                    <td className={result.status.toLowerCase()}>{result.status}</td>
+                                </tr>
+                            )
+                        }) : null
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+        );
+    }
+}
+
+export default App;import JsqlService from 'jsql-superagent';
 
 export class Cases {
 
@@ -281,7 +337,7 @@ export class Cases {
 
             try {
 
-                jsql.remove("delete from person where age > 30 ")
+                jsql.remove("delete from person where age > 30 and id > 0")
                     .then(function (result) {
                         console.log(self.cases.names.caseName7, result.body);
                         resultCallback('SUCCESS');
@@ -423,4 +479,9 @@ export class Cases {
 
     }
 
-}
+}import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+
+ReactDOM.render(<App />, document.getElementById('root'));

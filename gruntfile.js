@@ -1,214 +1,97 @@
-'use strict';
-
-var options = {
-};
-
-function generatePaths(begin, extension) {
-    var paths = [];
-
-    var path = begin;
-    for (var i = 0; i < 5; i++) {
-        path += '/**';
-        paths.push(path + '/*.' + extension);
-    }
-
-    return paths;
-}
-
-options.html2js = generatePaths('./src/app', 'html');
-options.htmls = generatePaths('./src/app', 'html');
-options.htmls.push('./src/index.html');
-options.jss = generatePaths('./src', 'js');
-options.styles = generatePaths('./src', 'css');
-
 module.exports = function (grunt) {
 
-    require('load-grunt-tasks')(grunt);
-    require('time-grunt')(grunt);
-    grunt.loadNpmTasks('grunt-html2js');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-jsql');
-    grunt.loadNpmTasks('grunt-run');
     grunt.initConfig({
 
-        open: {
-            dist: {
-                path: 'http://localhost:5000',
-                app: 'chrome.exe'
-            }
-        },
-
-        clean: {
-            dist: {
-                files: [{
-                    src: ['dist', 'App.js']
-                }]
-            }
-        },
-
         copy: {
-            backup: {
+
+            index: {
+
                 files: [
                     {
                         expand: true,
-                        dot: true,
-                        cwd: 'src',
-                        dest: './',
-                        src: 'App.js'
+                        cwd: '.',
+                        src: ['index.html'],
+                        dest: './public'
                     }
                 ]
-            },
 
-            disttosrc: {
-                files: [
-                    {
-                        expand: true,
-                        dot: true,
-                        cwd: 'dist',
-                        dest: 'src',
-                        src: 'App.js'
-                    }
-                ]
-            },
-
-            revers: {
-                files: [
-                    {
-                        expand: true,
-                        dot: true,
-                        cwd: '',
-                        dest: 'src',
-                        src: 'App.js'
-                    }
-                ]
-            },
-
-            devplugin: {
-                files: [
-                    {
-                        expand: true,
-                        dot: true,
-                        cwd: '../jsql-axios/dist',
-                        dest: 'node_modules/jsql-axios-plugin',
-                        src: 'jsql-axios-plugin.js'
-                    }
-                ]
-            },
-        },
-
-        concurrent: {
-
-            options: {
-                logConcurrentOutput: true
-            },
-
-            dist: [
-                'watch:jsDist',
-                'watch:css',
-                'watch:html'
-            ],
-
-            local: [
-                'watch:jsLocal',
-                'watch:css',
-                'watch:html'
-            ]
+            }
 
         },
 
         watch: {
+
+            index: {
+                files: ['index.html'],
+                tasks: ['build', 'preprocess-watch'],
+                options: {
+                    nospawn: true
+                }
+            },
+
+        },
+
+        concurrent: {
             options: {
-                spawn: false
+                logConcurrentOutput: true
             },
-            html: {
-                files: options.htmls,
-                tasks: ['watch-html']
-            },
-            jsLocal: {
-                files: options.jss,
-                tasks: ['concat:jsLocal', 'ngAnnotate', 'jsql']
-            },
-            jsDist: {
-                files: options.jss,
-                tasks: ['concat:jsDist', 'ngAnnotate', 'jsql']
-            },
-            css: {
-                files: options.styles,
-                tasks: ['concat:css']
+            watches: {
+                tasks: ["watch:index"]
             }
         },
 
-        jsql: {
-            target: {
-                options: {
-                    apiKey: '==XxPiAgZ3bAX6ZbbcvcbT6wqrPdJqQDXi+mBTK/zZTw==L818RZMBZ1mnOnOoSdMZ',
-                    src: 'src',
-                    dist: 'dist'
+        preprocess: {
+            options: {
+                context: {
+                    HOST: null
                 }
-            }
-        }
+            },
+            index: {
+                src: 'index.html',
+                dest: 'public/index.html'
+            },
+
+        },
 
     });
 
-    grunt.registerTask('buildDist', [
-        'clean',
-        'copy:index',
-        'concat:libs',
-        'html2js',
-        'concat:jsDist',
-        'ngAnnotate',
-        'concat:css',
-        'jsql'
-    ]);
+    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-preprocess');
 
-    grunt.registerTask('buildLocal', [
-        'clean',
-        'copy:index',
-        'concat:libs',
-        'html2js',
-        'concat:jsLocal',
-        'ngAnnotate',
-        'concat:css',
-        'jsql'
-    ]);
+    grunt.registerTask('build', ['copy:index']);
 
-    grunt.registerTask('watch-html', function () {
+    grunt.registerTask('preprocess-watch', function () {
 
-        grunt.task.run([
-            'copy:index', 'html2js'
-        ]);
+        grunt.config('preprocess.options.context.HOST', 'http://localhost:9192');
+        // grunt.config('preprocess.options.context.HOST', 'https://provider.jsql.it');
+
+        grunt.task.run('preprocess:index');
 
     });
 
-    grunt.registerTask('local', function () {
+    grunt.registerTask('dev', function () {
 
-        grunt.task.run([
-            'buildLocal',
-            'connect:dist',
-            'concurrent:local'
-        ]);
+        grunt.task.run('build');
+
+        grunt.config('preprocess.options.context.HOST', 'http://localhost:9192');
+        //  grunt.config('preprocess.options.context.HOST', 'https://provider.jsql.it');
+
+        grunt.task.run('preprocess:index');
+        grunt.task.run('concurrent:watches');
 
     });
 
-    grunt.registerTask('copy-hash', function () {
-        grunt.task.run([
-            'copy:backup',
-            'jsql',
-            'copy:disttosrc'
-        ]);
-    });
+    grunt.registerTask('default', function () {
 
-    grunt.registerTask('revers', function () {
-        grunt.task.run([
-            'copy:revers',
-            'clean'
-        ]);
-    });
+        grunt.task.run('build');
 
-    grunt.registerTask('browser', function () {
-        grunt.task.run([
-            'open:dist'
-        ]);
+        grunt.config('preprocess.options.context.HOST', 'https://provider.jsql.it');
+        grunt.config('jsql.target.options.local', false);
+
+        grunt.task.run('preprocess:index');
+
     });
 
 };
