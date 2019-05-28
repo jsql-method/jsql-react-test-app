@@ -3,7 +3,7 @@ FROM node:11 as builder
 WORKDIR /build
 
 ADD . /build
-RUN npm install -g grunt && \
+RUN npm install -g grunt jsql-cli && \
     npm install && \
     npm run build
 
