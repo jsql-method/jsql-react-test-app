@@ -6,7 +6,7 @@ ADD . /build
 RUN npm install -g bower grunt && \
     npm install && \
     npm run-script build  && \
-    grunt
+    grunt revers
 
 FROM nginx:stable-alpine
 COPY cicd/nginx/default.conf /etc/nginx/conf.d/default.conf
