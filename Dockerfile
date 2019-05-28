@@ -3,10 +3,9 @@ FROM node:11 as builder
 WORKDIR /build
 
 ADD . /build
-RUN npm install -g bower grunt && \
+RUN npm install -g grunt && \
     npm install && \
-    npm run-script build  && \
-    grunt revers
+    npm run build
 
 FROM nginx:stable-alpine
 COPY cicd/nginx/default.conf /etc/nginx/conf.d/default.conf
