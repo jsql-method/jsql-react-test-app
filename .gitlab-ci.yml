@@ -15,7 +15,7 @@ stages:
   before_script:
     - npm install -g bower grunt
     - npm install
-    - npm run-script build
+    - npm run build
     - grunt 
   artifacts:
     paths:
