@@ -27,7 +27,7 @@ class App extends Component {
         return (
 
             <div id="app">
-                <p><span>JSQL React (16.8.6) changed </span> - unit testing</p>
+                <p><span>JSQL React (16.8.6) </span> - unit testing</p>
                 <table>
                     <thead>
                         <th>Case</th>
@@ -337,7 +337,7 @@ export class Cases {
 
             try {
 
-                jsql.remove("delete from person where age > 30 and id > 0")
+                jsql.remove("delete from person where age > 30 ")
                     .then(function (result) {
                         console.log(self.cases.names.caseName7, result.body);
                         resultCallback('SUCCESS');
