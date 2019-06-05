@@ -11,8 +11,8 @@
   },
   "scripts": {
     "serve": "concurrently --kill-others \"grunt dev\" \"react-scripts start\" \"npm run jsql-watch\"",
-    "jsql-watch": "jsql-cli --debug --apiKey=dawid.senko@jsql.it --input=/src/**/*.js --devKeyFileName=test-key.key --env=local --watch",
-    "jsql-build": "jsql-cli --debug --apiKey=dawid.senko@jsql.it --output=/build/static/js/main.[...].chunk.js --input=/build/static/js/main.[...].chunk.js --devKeyFileName=test-key.key --env=test",
+    "jsql-watch": "jsql-cli --debug --apiKey=dawid.senko-react@jsql.it --input=/src/**/*.js --devKeyFileName=test-key.key --env=local --watch",
+    "jsql-build": "jsql-cli --debug --apiKey=dawid.senko-react@jsql.it --output=/build/static/js/main.[...].chunk.js --input=/build/static/js/main.[...].chunk.js --devKeyFileName=test-key.key --env=test",
     "build": "grunt && react-scripts build && npm run jsql-build",
     "react-serve": "react-scripts start"
   },
