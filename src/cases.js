@@ -202,10 +202,10 @@ export class Cases {
                     .then(function (result) {
                         console.log(self.cases.names.caseName5, result.body);
 
-                        if (!jsql.isArray(result)) {
-                            resultCallback('SUCCESS');
-                        } else {
+                        if (jsql.isArray(result.body)) {
                             resultCallback('FAILED');
+                        } else {
+                            resultCallback('SUCCESS');
                         }
 
                     })
