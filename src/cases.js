@@ -21,7 +21,6 @@ export class Cases {
     init(reference, state) {
 
         console.log('this.jsql', this.jsql);
-
         window.jupi = this.jsql;
 
         var self = this;
