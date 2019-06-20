@@ -38,9 +38,9 @@ class App extends Component {
                 <p><span>JSQL React (16.8.6) </span> - unit testing</p>
                 <table>
                     <thead>
-                        <th>Case</th>
-                        <th>Duration (ms)</th>
-                        <th>Status</th>
+                        <td>Case</td>
+                        <td>Duration (ms)</td>
+                        <td>Status</td>
                     </thead>
                     <tbody>
                     {this.state.results ?
