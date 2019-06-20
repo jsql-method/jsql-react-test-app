@@ -17,13 +17,11 @@ class App extends Component {
 
     componentDidMount() {
 
-        let jsqlConfig = new JsqlService({
+        let jsql = new JsqlService({
             host: window.host,
             apiKey: window.apiKey,
             devKey: window.devKey
         });
-
-        var jsql = jsqlConfig.getInstance();
 
         let cases = new Cases(jsql);
         cases.init(this, this.state);
