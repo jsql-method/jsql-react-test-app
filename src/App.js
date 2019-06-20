@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Cases} from "./cases";
 
 import './App.css';
-
+import JsqlService from "jsql-superagent";
 
 class App extends Component {
 
@@ -17,7 +17,15 @@ class App extends Component {
 
     componentDidMount() {
 
-        let cases = new Cases();
+        let jsqlConfig = new JsqlService({
+            host: window.host,
+            apiKey: window.apiKey,
+            devKey: window.devKey
+        });
+
+        var jsql = jsqlConfig.getInstance();
+
+        let cases = new Cases(jsql);
         cases.init(this, this.state);
         cases[cases.cases.names.caseName1]();
 
