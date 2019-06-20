@@ -1,6 +1,8 @@
-import JsqlService from 'jsql-superagent';
-
 export class Cases {
+
+    constructor(jsql){
+        this.jsql = jsql;
+    }
 
     cases = {
         fn: {},
@@ -18,15 +20,8 @@ export class Cases {
 
     init(reference, state) {
 
-        var jsqlConfig = new JsqlService({
-            host: window.host,
-            apiKey: window.apiKey,
-            devKey: window.devKey
-        });
-
-        var jsql = jsqlConfig.getInstance();
-
-        console.log(jsql);
+        console.log('this.jsql', this.jsql);
+        window.jupi = this.jsql;
 
         var self = this;
 
@@ -46,7 +41,7 @@ export class Cases {
 
             try {
 
-                jsql.insert("@sql insert into person (id, name, surname, age) values (nextval('person_id_seq'), :name, :surname, :age)")
+                self.jsql.insert("@sql insert into person (id, name, surname, age) values (nextval('person_id_seq'), :name, :surname, :age)")
                     .params({
                         name: 'Mirek',
                         surname: 'Wołyński',
@@ -86,7 +81,7 @@ export class Cases {
 
             try {
 
-                jsql.insert("@sql insert into car (id, price, year, model) values (nextval('car_id_seq'), ?, ?, ?)")
+                self.jsql.insert("@sql insert into car (id, price, year, model) values (nextval('car_id_seq'), ?, ?, ?)")
                     .params([19.500, 2000, 'Audi A3'])
                     .then(function (result) {
                         console.log(self.cases.names.caseName2, result.body);
@@ -122,7 +117,7 @@ export class Cases {
 
             try {
 
-                jsql.update("@sql update person set salary = 4000 where age > :age")
+                self.jsql.update("@sql update person set salary = 4000 where age > :age")
                     .param('age', 30)
                     .then(function (result) {
                         console.log(self.cases.names.caseName3, result.body);
@@ -160,7 +155,7 @@ export class Cases {
 
                 // jsql.update("update car set created_at = ?")
                 //     .params([ new Date().getTime() ])
-                jsql.update("@sql update car set type = ?")
+                self.jsql.update("@sql update car set type = ?")
                     .params(['osobowy'])
                     .then(function (result) {
                         console.log(self.cases.names.caseName4, result.body);
@@ -196,13 +191,13 @@ export class Cases {
 
             try {
 
-                jsql.selectOne("@sql select * from person where age > :ageMin and age < :ageMax limit 1")
+                self.jsql.selectOne("@sql select * from person where age > :ageMin and age < :ageMax limit 1")
                     .param('ageMin', 30)
                     .param('ageMax', 50)
                     .then(function (result) {
                         console.log(self.cases.names.caseName5, result.body);
 
-                        if (jsql.isArray(result.body)) {
+                        if (self.jsql.isArray(result.body)) {
                             resultCallback('FAILED');
                         } else {
                             resultCallback('SUCCESS');
@@ -239,12 +234,12 @@ export class Cases {
 
             try {
 
-                jsql.select("@sql select id, price from car")
+                self.jsql.select("@sql select id, price from car")
                     .then(function (result) {
 
                         console.log(self.cases.names.caseName6, result.body);
 
-                        if (jsql.isArray(result.body)) {
+                        if (self.jsql.isArray(result.body)) {
                             resultCallback('SUCCESS');
                         } else {
                             resultCallback('FAILED');
@@ -281,7 +276,7 @@ export class Cases {
 
             try {
 
-                jsql.remove("@sql delete from person where age > 30 ")
+                self.jsql.remove("@sql delete from person where age > 30 ")
                     .then(function (result) {
                         console.log(self.cases.names.caseName7, result.body);
                         resultCallback('SUCCESS');
@@ -315,7 +310,7 @@ export class Cases {
 
             try {
 
-                jsql.remove("@sql delete from car where price <> :price")
+                self.jsql.remove("@sql delete from car where price <> :price")
                     .params({
                         price: 10.000
                     })
@@ -353,7 +348,7 @@ export class Cases {
 
             try {
 
-                var transaction = jsql.tx();
+                var transaction = self.jsql.tx();
 
                 transaction.insert("@sql insert into car (id, price, year, model) values (nextval('car_id_seq'), ?, ?, ?)")
                     .params([180000, 2018, 'Audi A6'])
@@ -395,7 +390,7 @@ export class Cases {
 
             try {
 
-                var transaction = jsql.tx();
+                var transaction = self.jsql.tx();
 
                 transaction.insert("@sql insert into car (id, price, year, model) values (nextval('car_id_seq'), ?, ?, ?)")
                     .params([200000, 2019, 'Volkswagen Variant'])
